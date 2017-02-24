@@ -2,7 +2,7 @@
 <html lang="pt-br">
   <head>
     <meta charset="utf-8">
-    <!--meta http-equiv="X-UA-Compatible" content="IE=edge"-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Silex</title>
     <!-- Bootstrap -->
@@ -35,9 +35,16 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/general">General Questions</a></li>
-            <li><a href="/backend">Backend Questions</a></li>
-            <li><a href="/frontend">Frontend Questions</a></li>
+            <li><a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">General Questions</a>
+	            <ul class="dropdown-menu">
+	            	<li><a href="/bubble">Bubble Sort</a></li>
+	            	<li><a href="/linkedlist">Linked List</a></li>
+	            	<li><a href="/stones">Game of Stones</a></li>
+	            	<li><a href="/tweet">Twitter API</a></li>
+	            </ul>
+            </li>
+            <li><a href="/backquest">Backend Questions</a></li>
+            <li><a href="/frontquest">Frontend Questions</a></li>
             <li><a href="/me">About me</a></li>
           </ul>
         </div>

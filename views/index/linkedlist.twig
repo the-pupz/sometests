@@ -1,0 +1,60 @@
+{% extends 'layout.twig' %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+  	<p>NOTICE: In the email sended, you said to me to solve only questions 1, 2 and 4... BUT you gave me questions 1, 3, 4 and 5. So I decided to solve EVERYTHING. Good or not, what you asked for was solved anyway.</p>
+  </div>
+</div>
+<br>
+<div class="container-fluid" id="bubble">
+  <div class="row">
+  	<h3>Linked List</h3>
+  	<form id="formNode">
+	  <div class="form-group">
+	    <label for="exampleInputEmail1">Email address</label>
+	    <input type="text" class="form-control" id="node" placeholder="Type some string to link int he list">
+	  </div>
+	  <button id="btnSubmit" type="submit" class="btn btn-default">Submit</button>
+	</form>
+  </div>
+  <div class="row" id="list">
+  	{{ dump(list) }}
+  </div>  
+</div>
+
+<script type="text/javascript">
+	var frm = $('#formNode');
+    frm.submit(function (ev) {
+        $('#btnSubmit').prop("disabled",true);
+
+        //Validate fields if required using jQuery
+
+        var postForm = { //Fetch form data
+            'node': $('#node').val() //Store name fields value
+        };
+
+        $.ajax({ //Process the form using $.ajax()
+            type: 'POST', //Method type
+            url: '/linkedlist/add', //Your form processing file URL
+            data: postForm, //Forms name
+            dataType: 'json',
+            beforeSend: function(){
+		    // Handle the beforeSend event
+		    	alert("sending...");
+			},
+			complete: function(data){
+			// Handle the complete event
+            	console.log(data);
+			}
+    	})
+    	.done(function(data) {
+	 		console.log(data);
+	 		var teste = JSON.stringify(data);
+	 		console.log(teste);
+	 		$('#list').text(teste);
+		});
+    	$('#btnSubmit').prop("disabled",false);
+    	ev.preventDefault();
+    });
+</script>
+{% endblock %}
