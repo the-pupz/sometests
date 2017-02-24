@@ -27,23 +27,17 @@ $app->get('/', function () use ($app) {
   return $app['twig']->render('index/index.twig');
 });
 
+$app->get('/general', function () use ($app) {
+  return $app['twig']->render('index/general.twig');
+});
+$app->get('/backend', function () use ($app) {
+  return $app['twig']->render('index/backend.twig');
+});
+$app->get('/frontend', function () use ($app) {
+  return $app['twig']->render('index/frontend.twig');
+});
 $app->get('/me', function () use ($app) {
   return $app['twig']->render('about/about.me.twig');
-});
-
-$app->error(function (\Exception $e, $code) use ($app) {
- switch ($code) {
- case 404:
- $message = $app['twig']->render('error404.twig', array(
- 'code' => $code,
- 'message' => $e->getMessage ()
- ));
- break;
- default:
- $message = $e->getMessage() . ' no arquivo ' . $e->getFile() . ', na linha: ' . $e->getLine();
- break;
- }
- return new Response($message, $code);
 });
 
 $app->run();
