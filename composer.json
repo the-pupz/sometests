@@ -1,0 +1,11 @@
+{
+	"require": {
+        "components/jquery": "3.*.*",
+		"twbs/bootstrap": "^3.3",
+		"silex/silex": "~2.0",
+		"twig/twig": "^2.1",
+		"symfony/twig-bridge": "^3.2",
+		"doctrine/dbal": "2.2.*"
+    }
+
+}
