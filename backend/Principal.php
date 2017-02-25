@@ -4,12 +4,12 @@ namespace Principal;
 class General
 {
 	function BubbleSort(){
-		//Vetor de [A ... J]
+		//Array [1 ... 20]
 		$data =  range('1','20');
-		//Desordenando.
+		//Everyday I'm shuffling.
 		shuffle($data);
 		$data1 = $data;
-		//Ordenando por bubble sort
+		//Doing BubbleSort
 		$nowData = null;
 		for ( $i = 0; $i < count($data); $i++){
 			for ($j = 0; $j < count($data); $j++){
@@ -258,14 +258,22 @@ class LinkList
 
 class TwitterApi{
 
+	//Private properties, so only this class can use and access them
 	private $baseUrl = 'https://api.twitter.com/';
 
 	private $consumerKey = 'vbGapbgB6J4wlfkBlY6Yag8EI';
 	private $consumerSecret = 'wh8VbUDmu8ivrYCYX6MCybjQjah99RGyLUhlUSy3qMDnn1SL1Q';
 
-	private $bearerToken = 'wh8VbUDmu8ivrYCYX6MCybjQjah99RGyLUhlUSy3qMDnn1SL1Q';
+	private $bearerToken;
 
+	private $error = false;
+	private $errMessage = '';
+
+	private $searchResponse;
+
+	//Function to get the Token for all calls API do
 	private function getBearerToken(){
+
 		$concat = $this->consumerKey.':'.$this->consumerSecret;
 
 		$base64 = base64_encode($concat);	
@@ -294,17 +302,87 @@ class TwitterApi{
 		curl_close($curl);
 
 		if ($err) {
-		  return "Auth Error, please check that!";
+		  $this->errMessage = "Auth Error, please check that! ".$err;
+		  $this->error = true;
 		} else {
 		  $this->bearerToken = json_decode($response)->access_token;
+		  $this->error = false;
 		}
 	}
 
-	public function call(){
+	//Principal function, generates authorization token, get tweets from search API and return JSON with all Response
+	public function call($string){
 
 		$teste = $this->getBearerToken();
 
-		return $this->bearerToken;
+		if(!$this->errror){
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+			  CURLOPT_URL => $this->baseUrl."1.1/search/tweets.json?q=".$string."&count=10",
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => "",
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 30,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => "GET",
+			  CURLOPT_HTTPHEADER => array(
+			    "authorization: Bearer ".$this->bearerToken,
+			    "cache-control: no-cache"
+			  ),
+			));
+
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+
+			curl_close($curl);
+
+			if ($err) {
+			  $this->errMessage = "Auth Error, please check that! ".$err;
+			  $this->error = true;
+			} else {
+			  $this->searchResponse = json_decode($response, true);
+			  $this->error = false;
+			}
+
+			if($this->errror){
+				return $this->errMessage;
+			} else {
+				return json_encode($this->searchResponse);
+			}
+		} else {
+			return $this->errMessage;
+		}
+	}
+}
+
+class GameOfStones{
+
+	private $testCases;
+
+	private $messageResult;
+
+	public function __construct($integer){
+		$this->testCases = $integer;
+	}
+
+	public function loadResults(){
+		/*
+		This game is that simple, the only way player 2 wins is when the number of stones are equal 1 or a multiple of 7. Just do a board test from 1 to 22 stones and you'll see it. So, i just need to check if the number of stones in game are equal 1 or multiple of 7. :D
+		*/
+		for ($i=1; $i <= $this->testCases ; $i++) { 
+			if($i >= 7)
+            	$n = $i % 7;
+        	else
+    			$n = $i;
+
+	        if($n == 0 || $i == 1)
+	            $this->messageResult[$i] = "Second";
+	        else
+	            $this->messageResult[$i] = "First";
+		}
+
+		return $this->messageResult;
 	}
 }
 ?>

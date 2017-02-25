@@ -13,6 +13,7 @@ use Principal\General;
 use Principal\LinkList;
 use Principal\ListNode;
 use Principal\TwitterApi;
+use Principal\GameOfStones;
 
 $app = new Application();
 
@@ -75,58 +76,55 @@ $app->get('/linkedlist', function () use ($app) {
   ));
 });
 
-$app->post('/linkedlist/add/1', function (Request $request) use ($app) {
+$app->post('/linkedlist/add/{number}', function (Request $request, $number) use ($app) {
   $message = $request->get('node');
   $list = $app['session']->get('listnode');
-  $list->insertFirst($message);
+  if($number == '1'){
+    $list->insertFirst($message);
+  } elseif ($number == '2') {
+    $list->insertLast($message);
+  }
   $array = $list->readList();
   $app['session']->set('listnode', $list);
   return new Response(json_encode($array), 200);
 });
 
-$app->post('/linkedlist/add/2', function (Request $request) use ($app) {
-  $message = $request->get('node');
+$app->post('/linkedlist/remove/{number}', function (Request $request, $number) use ($app) {
   $list = $app['session']->get('listnode');
-  $list->insertLast($message);
-  $array = $list->readList();
-  $app['session']->set('listnode', $list);
-  return new Response(json_encode($array), 200);
-});
-
-$app->post('/linkedlist/remove/1', function (Request $request) use ($app) {
-  $list = $app['session']->get('listnode');
-  $list->deleteFirstNode();
-  $array = $list->readList();
-  $app['session']->set('listnode', $list);
-  return new Response(json_encode($array), 200);
-});
-
-$app->post('/linkedlist/remove/2', function (Request $request) use ($app) {
-  $list = $app['session']->get('listnode');
-  $list->deleteLastNode();
+  if($number == '1'){
+    $list->deleteFirstNode();
+  } elseif ($number == '2') {
+    $list->deleteLastNode();
+  }
   $array = $list->readList();
   $app['session']->set('listnode', $list);
   return new Response(json_encode($array), 200);
 });
 
 $app->get('/tweet', function () use ($app) {
+  return $app['twig']->render('index/tweet.twig');
+});
+
+$app->post('/tweet/search', function (Request $request) use ($app) {
+  $message = $request->get('search');
   $tweet = new TwitterApi();
-  $array = $tweet->call();
-  return $app['twig']->render('index/tweet.twig', array(
-    'teste' => ($array)
-  ));
+  $array = $tweet->call($message);
+  return new Response(json_encode($array), 200);
+});
+
+$app->get('/stones', function () use ($app) {
+  return $app['twig']->render('index/stones.twig');
+});
+
+$app->post('/stones/game', function (Request $request) use ($app) {
+  $message = $request->get('cases');
+  $list = new GameOfStones($message);
+  $array = $list->loadResults();
+  return new Response(json_encode($array), 200);
 });
 
 $app->get('/backquest', function () use ($app) {
   return $app['twig']->render('index/backend.twig');
-});
-
-$app->get('/frontquest', function () use ($app) {
-  return $app['twig']->render('index/frontend.twig');
-});
-
-$app->get('/me', function () use ($app) {
-  return $app['twig']->render('about/about.me.twig');
 });
 
 $app->run();

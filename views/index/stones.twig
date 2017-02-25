@@ -8,21 +8,21 @@
 <br>
 <div class="container-fluid" id="bubble">
   <div class="row">
-  	<h3>Twitter API</h3>
+  	<h3>Game of Stones</h3>
   	<form id="formTweet">
 	  <div class="form-group">
-	    <label for="search"></label>
-	    <input type="text" class="form-control" id="search" placeholder="What word you want to serach?">
+	    <label for="cases"></label>
+	    <input type="text" class="form-control" id="cases" placeholder="Type the number of tests cases you want to do">
 	  </div>
-	  <button id="btnSubmit" type="submit" class="btn btn-default">Search Tweets</button>
+	  <button id="btnSubmit" type="submit" class="btn btn-default">Play</button>
 	</form>
   </div>
   <br>
   <br>
-  <h4>Last 10 Tweets:</h4>
+  <h4>Test Cases:</h4>
   <br>
   <div class="row" id="list">
-  </div>  
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -33,12 +33,12 @@
 
 	        //Validate fields if required using jQuery
 	        var postForm = { //Fetch form data
-	            'search': $('#search').val() //Store name fields value
+	            'cases': $('#cases').val() //Store name fields value
 	        };
 
 	        $.ajax({ //Process the form using $.ajax()
 	            type: 'POST', //Method type
-	            url: '/tweet/search', //Your form processing file URL
+	            url: '/stones/game', //Your form processing file URL
 	            data: postForm, //Forms name
 	            dataType: 'json',
 	            beforeSend: function(){
@@ -51,13 +51,13 @@
 				}
 	    	})
 	    	.done(function(data) {
-		 		//console.log(data);
-		 		var teste = jQuery.parseJSON(data);
+		 		console.log(data);
+
 		 		var html = "<div class='row'>";
-		 		console.log(teste.statuses);
-		 		$.each(teste.statuses, function(index, value){
-		 			//console.log(value.text);
-		 			html += "<p>"+value.text+"</p><br>";
+
+		 		$.each(data, function(index, value){
+		 			console.log(index+" / "+value);
+		 			html += "<p>Case: "+index+" / Winner: "+value+"</p><br>";
 		 		});
 		 		html += "</div>";
 		 		$('#list').html(html);
