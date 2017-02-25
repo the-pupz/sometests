@@ -8,11 +8,11 @@
 <br>
 <div class="container-fluid" id="bubble">
   <div class="row">
-  	<h3>Linked List</h3>
+  	<h3>Twitter API</h3>
   	<form id="formNode">
 	  <div class="form-group">
 	    <label for="node"></label>
-	    <input type="text" class="form-control" id="node" placeholder="Type some string to link in the list">
+	    <input type="text" class="form-control" id="node" placeholder="What word you want to serach?">
 	  </div>
 	  <div class="radio">
 	  	<label>
@@ -30,15 +30,11 @@
 	</form>
   </div>
   <br>
-  <div class="row">
-  	<button id="btnRemoveFs" type="submit" class="btn btn-default" onclick="removeNode(1);">Remove First Node</button>
-  	<button id="btnRemoveLs" type="submit" class="btn btn-default" onclick="removeNode(2);">Remove Last Node</button>
-  </div> 
   <br>
   <h4>List:</h4>
   <br>
   <div class="row" id="list">
-  	{{ list }}
+  	{{ dump(teste) }}
   </div>  
 </div>
 

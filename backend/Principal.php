@@ -139,8 +139,9 @@ class LinkList
                     $previousNode = $currentNode;
                     $currentNode = $currentNode->next;
                 }
- 
+
                 $previousNode->next = NULL;
+                $this->lastNode = $previousNode;
                 $this->count--;
             }
         }
@@ -253,5 +254,57 @@ class LinkList
             }
         }
     }
+}
+
+class TwitterApi{
+
+	private $baseUrl = 'https://api.twitter.com/';
+
+	private $consumerKey = 'vbGapbgB6J4wlfkBlY6Yag8EI';
+	private $consumerSecret = 'wh8VbUDmu8ivrYCYX6MCybjQjah99RGyLUhlUSy3qMDnn1SL1Q';
+
+	private $bearerToken = 'wh8VbUDmu8ivrYCYX6MCybjQjah99RGyLUhlUSy3qMDnn1SL1Q';
+
+	private function getBearerToken(){
+		$concat = $this->consumerKey.':'.$this->consumerSecret;
+
+		$base64 = base64_encode($concat);	
+
+		$curl = \curl_init();
+
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => $this->baseUrl."oauth2/token",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "POST",
+		  CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\nclient_credentials\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
+		  CURLOPT_HTTPHEADER => array(
+		    "authorization: Basic ".$base64,
+		    "cache-control: no-cache",
+		    "content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		  return "Auth Error, please check that!";
+		} else {
+		  $this->bearerToken = json_decode($response)->access_token;
+		}
+	}
+
+	public function call(){
+
+		$teste = $this->getBearerToken();
+
+		return $this->bearerToken;
+	}
 }
 ?>

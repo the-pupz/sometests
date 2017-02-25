@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Principal\General;
 use Principal\LinkList;
 use Principal\ListNode;
+use Principal\TwitterApi;
 
 $app = new Application();
 
@@ -40,9 +41,11 @@ $app->before(function (Request $request) use ($app) {
         }
     }
 });
+
 if(null === $user = $app['session']->get('listnode')){
   $app['session']->set('listnode', new LinkList());
 }
+//$app['session']->set('listnode', new LinkList());
 
 $app->get('/hello/{name}', function ($name) use ($app) {
   return $app['twig']->render('hello.twig', array(
@@ -64,21 +67,54 @@ $app->get('/bubble', function () use ($app) {
   ));
 });
 
-$app->get('/linkedlist', function () use ($app, $list) {
+$app->get('/linkedlist', function () use ($app) {
   $list = $app['session']->get('listnode');
   $array = $list->readList();
   return $app['twig']->render('index/linkedlist.twig', array(
-    'list' => $array
+    'list' => json_encode($array)
   ));
 });
 
-$app->post('/linkedlist/add/{$number}', function (Request $request) use ($app, $list) {
+$app->post('/linkedlist/add/1', function (Request $request) use ($app) {
   $message = $request->get('node');
   $list = $app['session']->get('listnode');
   $list->insertFirst($message);
   $array = $list->readList();
   $app['session']->set('listnode', $list);
   return new Response(json_encode($array), 200);
+});
+
+$app->post('/linkedlist/add/2', function (Request $request) use ($app) {
+  $message = $request->get('node');
+  $list = $app['session']->get('listnode');
+  $list->insertLast($message);
+  $array = $list->readList();
+  $app['session']->set('listnode', $list);
+  return new Response(json_encode($array), 200);
+});
+
+$app->post('/linkedlist/remove/1', function (Request $request) use ($app) {
+  $list = $app['session']->get('listnode');
+  $list->deleteFirstNode();
+  $array = $list->readList();
+  $app['session']->set('listnode', $list);
+  return new Response(json_encode($array), 200);
+});
+
+$app->post('/linkedlist/remove/2', function (Request $request) use ($app) {
+  $list = $app['session']->get('listnode');
+  $list->deleteLastNode();
+  $array = $list->readList();
+  $app['session']->set('listnode', $list);
+  return new Response(json_encode($array), 200);
+});
+
+$app->get('/tweet', function () use ($app) {
+  $tweet = new TwitterApi();
+  $array = $tweet->call();
+  return $app['twig']->render('index/tweet.twig', array(
+    'teste' => ($array)
+  ));
 });
 
 $app->get('/backquest', function () use ($app) {
