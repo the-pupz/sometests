@@ -6,7 +6,7 @@ This is the official repository to my tests.
 
 Make sure you have PHP with the cURL extension enabled.
 
-Clone the repository, open the terminal and run the PHP server as simple as possible, such as:
+Clone the repository, open the terminal, run "composer install" and run the PHP server as simple as possible, such as:
 
 Php -S localhost:9999
 
