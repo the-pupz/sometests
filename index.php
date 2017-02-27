@@ -2,7 +2,7 @@
 
 // web/index.php
 require_once __DIR__.'/vendor/autoload.php';
-
+require_once __DIR__.'/backend/Principal.php';
 
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;

@@ -315,7 +315,7 @@ class TwitterApi{
 
 		$teste = $this->getBearerToken();
 
-		if(!$this->errror){
+		if(!$this->error){
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
@@ -345,7 +345,7 @@ class TwitterApi{
 			  $this->error = false;
 			}
 
-			if($this->errror){
+			if($this->error){
 				return $this->errMessage;
 			} else {
 				return json_encode($this->searchResponse);
